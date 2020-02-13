@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 
@@ -63,7 +64,7 @@ class Example(QMainWindow):
 
         }
         if self.point_x is not None:
-            params["pt"] = f"{x},{y},pm2rdm"
+            params["pt"] = f"{self.point_x},{self.point_y},pm2rdm"
         response = requests.get(map_request, params=params)
 
         if not response:
