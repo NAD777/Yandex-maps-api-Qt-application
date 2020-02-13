@@ -6,6 +6,8 @@ from PyQt5 import uic, QtCore
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
+import math
+
 SCREEN_SIZE = [600, 450]
 
 
@@ -77,6 +79,27 @@ class Example(QMainWindow):
         if event.key() == QtCore.Qt.Key_Period:  # > btn
             if self.z > 1:
                 self.z -= 1
+
+        if event.key() == QtCore.Qt.Key_Left:
+            move_x = 360 / (2 ** (self.z + 8)) * 575
+            if float(self.x) - move_x >= -180:
+                self.x = str(float(self.x) - move_x)
+
+        if event.key() == QtCore.Qt.Key_Right:
+            move_x = 360 / (2 ** (self.z + 8)) * 575
+            if float(self.x) + move_x <= 180:
+                self.x = str(float(self.x) + move_x)
+        
+        if event.key() == QtCore.Qt.Key_Up:
+            move_y = math.cos(math.radians(float(self.y))) * 180 / (2 ** (self.z + 8)) * 800
+            if float(self.y) + move_y <= 180:
+                self.y = str(float(self.y) + move_y)
+
+        if event.key() == QtCore.Qt.Key_Down:
+            move_y = math.cos(math.radians(float(self.y))) * 180 / (2 ** (self.z + 8)) * 800
+            if float(self.y) - move_y >= -180:
+                self.y = str(float(self.y) - move_y)
+        
         self.refresh()
 
     def initUI(self):
