@@ -16,12 +16,12 @@ class Example(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi("main.ui", self)
-        # self.y, self.x = input().split(", ")
-        self.y, self.x = 52.727525, 41.456136
+        self.y, self.x = input().split(", ")
+        self.point_x, self.point_y = None, None
+        # self.y, self.x = 52.727525, 41.456136
 
         self.z = 14
 
-        self.setGeometry(100, 100, *SCREEN_SIZE)
         self.setWindowTitle('Отображение карты')
 
         ## Изображение
@@ -33,6 +33,15 @@ class Example(QMainWindow):
 
         self.refresh()
 
+        self.find_btn.clicked.connect(self.find_func)
+
+    def find_func(self):
+        text = self.addres.text()
+        self.x, self.y = self.get_coords(text)
+        self.point_x, self.point_y = self.x, self.y
+        self.refresh()
+        self.image.setFocus()
+        self.update()
 
     def get_coords(self, place):
         url = "http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b"
@@ -53,6 +62,8 @@ class Example(QMainWindow):
             "z": f"{self.z}"
 
         }
+        if self.point_x is not None:
+            params["pt"] = f"{x},{y},pm2rdm"
         response = requests.get(map_request, params=params)
 
         if not response:
@@ -75,6 +86,7 @@ class Example(QMainWindow):
     def refresh(self):
         self.getImage(self.x, self.y)
         self.set_image()
+        self.update()
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Q:
@@ -108,16 +120,6 @@ class Example(QMainWindow):
                 self.y = str(float(self.y) - move_y)
         
         self.refresh()
-
-    def initUI(self):
-        self.setGeometry(100, 100, *SCREEN_SIZE)
-        self.setWindowTitle('Отображение карты')
-
-        ## Изображение
-        self.pixmap = QPixmap(self.map_file)
-        self.image.move(0, 0)
-        self.image.resize(600, 450)
-        self.image.setPixmap(self.pixmap)
 
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
