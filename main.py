@@ -25,10 +25,6 @@ class Example(QMainWindow):
 
         self.setWindowTitle('Отображение карты')
 
-        ## Изображение
-        self.image.move(0, 0)
-        self.image.resize(600, 450)
-
         self.type_map = ["map", "sat", "sat,skl"]
         self.type_iter = 0
 
@@ -47,6 +43,7 @@ class Example(QMainWindow):
     
     def reset_func(self):
         self.point_x, self.point_y = None, None
+        self.label_addres.setText("")
         self.refresh()
 
     def get_coords(self, place):
@@ -56,8 +53,9 @@ class Example(QMainWindow):
             "format": "json"
         }
         response = requests.get(url=url, params=params)
-        x, y = response.json()["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"][
-            "Point"]["pos"].split()
+        obj = response.json()["response"]["GeoObjectCollection"]["featureMember"][0]
+        self.label_addres.setText(obj["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]["text"])
+        x, y = obj["GeoObject"]["Point"]["pos"].split()
         return x, y
 
     def getImage(self, x, y):
