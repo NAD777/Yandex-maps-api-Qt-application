@@ -17,9 +17,9 @@ class Example(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi("main.ui", self)
-        self.y, self.x = input().split(", ")
+        # self.y, self.x = input().split(", ")
         self.point_x, self.point_y = None, None
-        # self.y, self.x = 52.727525, 41.456136
+        self.y, self.x = 52.727525, 41.456136
 
         self.z = 14
 
@@ -35,6 +35,7 @@ class Example(QMainWindow):
         self.refresh()
 
         self.find_btn.clicked.connect(self.find_func)
+        self.reset.clicked.connect(self.reset_func)
 
     def find_func(self):
         text = self.addres.text()
@@ -43,6 +44,10 @@ class Example(QMainWindow):
         self.refresh()
         self.image.setFocus()
         self.update()
+    
+    def reset_func(self):
+        self.point_x, self.point_y = None, None
+        self.refresh()
 
     def get_coords(self, place):
         url = "http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b"

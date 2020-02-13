@@ -45,7 +45,7 @@
      <rect>
       <x>10</x>
       <y>460</y>
-      <width>471</width>
+      <width>351</width>
       <height>31</height>
      </rect>
     </property>
@@ -56,6 +56,19 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="reset">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>460</y>
+      <width>113</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Сброс</string>
     </property>
    </widget>
   </widget>
