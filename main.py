@@ -27,7 +27,12 @@ class Example(QMainWindow):
         ## Изображение
         self.image.move(0, 0)
         self.image.resize(600, 450)
+
+        self.type_map = ["map", "sat", "sat,skl"]
+        self.type_iter = 0
+
         self.refresh()
+
 
     def get_coords(self, place):
         url = "http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b"
@@ -44,7 +49,7 @@ class Example(QMainWindow):
         map_request = "http://static-maps.yandex.ru/1.x/"
         params = {
             "ll": f"{x},{y}",
-            "l": "map",
+            "l": self.type_map[self.type_iter],
             "z": f"{self.z}"
 
         }
@@ -71,7 +76,9 @@ class Example(QMainWindow):
         self.getImage(self.x, self.y)
         self.set_image()
 
-    def keyPressEvent(self, event):  # Key_Comma, Key_Period
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Q:
+            self.type_iter = (self.type_iter + 1) % len(self.type_map) 
         if event.key() == QtCore.Qt.Key_Comma:  # < btn
             if self.z < 17:
                 self.z += 1
