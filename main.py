@@ -32,6 +32,21 @@ class Example(QMainWindow):
 
         self.find_btn.clicked.connect(self.find_func)
         self.reset.clicked.connect(self.reset_func)
+        self.post_code.clicked.connect(self.post_code_func)
+
+        self.show_post_code = True
+
+        self.post_index = ""
+
+    def post_code_func(self):
+        self.show_post_code = not self.show_post_code
+        if self.show_post_code:
+            self.label_addres.setText(self.label_addres.text() + ' ' + self.post_index)
+            self.post_code.setStyleSheet('background-color: green;color:white;')
+        else:
+            self.post_code.setStyleSheet('')
+            self.label_addres.setText(self.label_addres.text()[:-len(self.post_index) - 1])
+        self.update()
 
     def find_func(self):
         text = self.addres.text()
@@ -44,6 +59,7 @@ class Example(QMainWindow):
     def reset_func(self):
         self.point_x, self.point_y = None, None
         self.label_addres.setText("")
+        self.post_index = ''
         self.refresh()
 
     def get_coords(self, place):
@@ -53,8 +69,15 @@ class Example(QMainWindow):
             "format": "json"
         }
         response = requests.get(url=url, params=params)
+        # print(response.json())
         obj = response.json()["response"]["GeoObjectCollection"]["featureMember"][0]
-        self.label_addres.setText(obj["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]["text"])
+        # print(obj)
+        try:
+            self.post_index = obj["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]["Address"]["postal_code"]
+        except KeyError:
+            self.post_index = ""
+        print(self.post_index)
+        self.label_addres.setText(obj["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]["text"] + ' ' + self.post_index)
         x, y = obj["GeoObject"]["Point"]["pos"].split()
         return x, y
 
