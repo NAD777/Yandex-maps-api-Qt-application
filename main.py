@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-
 import requests
 from PyQt5 import uic, QtCore
 from PyQt5.QtGui import QPixmap
@@ -26,6 +25,7 @@ class Example(QMainWindow):
         self.setWindowTitle('Отображение карты')
 
         self.type_map = ["map", "sat", "sat,skl"]
+        self.ras_map = ["map.png", "map.jpg", "map.jpg"]
         self.type_iter = 0
 
         self.refresh()
@@ -100,7 +100,7 @@ class Example(QMainWindow):
             sys.exit(1)
 
         # Запишем полученное изображение в файл.
-        self.map_file = "map.png"
+        self.map_file = self.ras_map[self.type_iter]
         with open(self.map_file, "wb") as file:
             file.write(response.content)
 
