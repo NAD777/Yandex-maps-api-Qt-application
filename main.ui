@@ -45,7 +45,7 @@
      <rect>
       <x>10</x>
       <y>490</y>
-      <width>231</width>
+      <width>261</width>
       <height>31</height>
      </rect>
     </property>
@@ -56,6 +56,9 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="placeholderText">
+     <string>Адрес</string>
     </property>
    </widget>
    <widget class="QPushButton" name="reset">
@@ -84,14 +87,19 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="post_code">
+   <widget class="QCheckBox" name="post_code">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>280</x>
       <y>490</y>
-      <width>113</width>
-      <height>41</height>
+      <width>87</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>15</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>Индекс</string>

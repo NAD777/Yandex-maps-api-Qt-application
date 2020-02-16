@@ -32,19 +32,17 @@ class Example(QMainWindow):
 
         self.find_btn.clicked.connect(self.find_func)
         self.reset.clicked.connect(self.reset_func)
-        self.post_code.clicked.connect(self.post_code_func)
+        self.post_code.stateChanged.connect(self.post_code_func)
 
         self.show_post_code = True
 
         self.post_index = ""
 
     def post_code_func(self):
-        self.show_post_code = not self.show_post_code
-        if self.show_post_code:
+        # self.show_post_code = not self.show_post_code
+        if self.post_code.isChecked():
             self.label_addres.setText(self.label_addres.text() + ' ' + self.post_index)
-            self.post_code.setStyleSheet('background-color: green;color:white;')
         else:
-            self.post_code.setStyleSheet('')
             self.label_addres.setText(self.label_addres.text()[:-len(self.post_index) - 1])
         self.update()
 
