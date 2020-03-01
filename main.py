@@ -59,6 +59,7 @@ class Example(QMainWindow):
                 x = (x_cur - 300) * 360 / 2 ** (self.z + 8) 
                 y = (y_cur - dy - 225) * 230 / 2 ** (self.z + 8) 
                 new_x, new_y = self.get_nearby(self.x + x, self.y - y)
+                print(new_x, new_y)
                 if new_x is not None:
                     self.x, self.y = new_x, new_y
                     self.point_x, self.point_y = self.x, self.y
@@ -68,17 +69,25 @@ class Example(QMainWindow):
                     self.update()
 
     def get_nearby(self, x, y):
-        print([x, y])
+
+        url = "http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b"
+        params = {
+            "geocode": f"{x,y}",
+            "format": "json"
+        }
+        response = requests.get(url=url, params=params)
+
+        address = response.json()["response"]["GeoObjectCollection"]["featureMember"][0]['GeoObject']['metaDataProperty']['GeocoderMetaData']['text']
+
         search_api_server = "https://search-maps.yandex.ru/v1/"
         api_key = "dda3ddba-c9ea-4ead-9010-f43fbc15c6e3"
         
-        address_ll = f"{x},{y}"
         search_params = {
             "apikey": api_key,
-            "text": "",
+            "text": f"{address}",
             "lang": "ru_RU",
-            "results": 500,
-            "ll": f"{y},{x}",
+            "results": 10,
+            # "ll": f"{y},{x}",
             "type": "biz",
             "spn": "0.001,0.001"
         }
@@ -89,6 +98,7 @@ class Example(QMainWindow):
             if self.lonlat_distance((x, y), (x_comp, y_comp)) <= 50:
                 print("get:", x_comp, y_comp)
                 print(company)
+                
                 return x_comp, y_comp
         return None, None
 
