@@ -58,13 +58,22 @@ class Example(QMainWindow):
             elif event.buttons() == Qt.RightButton:
                 x = (x_cur - 300) * 360 / 2 ** (self.z + 8) 
                 y = (y_cur - dy - 225) * 230 / 2 ** (self.z + 8) 
-                new_x, new_y = self.get_nearby(self.x + x, self.y - y)
-                print(new_x, new_y)
+                new_x, new_y, text = self.get_nearby(self.x + x, self.y - y)
+                # print(new_x, new_y, text)
                 if new_x is not None:
                     self.x, self.y = new_x, new_y
                     self.point_x, self.point_y = self.x, self.y
+                    
+                    # company["properties"]["name"]
                     self.get_coords(f"{self.x},{self.y}")
                     self.getImage(self.x, self.y)
+                    if self.post_code.isChecked():
+                        self.label_addres.setText(text)
+                        self.post_code_func()
+                    else:
+                        self.label_addres.setText(text)
+                        self.post_code_func()
+
                     self.set_image()
                     self.update()
 
@@ -92,15 +101,15 @@ class Example(QMainWindow):
             "spn": "0.001,0.001"
         }
         response = requests.get(search_api_server, params=search_params).json()
-        print(response)
+        # print(response)
         for company in response["features"]:
             x_comp, y_comp = company["geometry"]["coordinates"]
             if self.lonlat_distance((x, y), (x_comp, y_comp)) <= 50:
-                print("get:", x_comp, y_comp)
-                print(company)
+                # print("get:", x_comp, y_comp)
+                # print()
                 
-                return x_comp, y_comp
-        return None, None
+                return x_comp, y_comp, company["properties"]["name"]
+        return None, None, None
 
     def lonlat_distance(self, a, b):
         degree_to_meters_factor = 111 * 1000  # 111 километров в метрах
@@ -124,7 +133,8 @@ class Example(QMainWindow):
         if self.post_code.isChecked():
             self.label_addres.setText(self.label_addres.text() + ' ' + self.post_index)
         else:
-            self.label_addres.setText(self.label_addres.text()[:-len(self.post_index) - 1])
+            if self.label_addres.text().endswith(self.post_index):
+                self.label_addres.setText(self.label_addres.text()[:-len(self.post_index) - 2])
         self.update()
 
     def find_func(self, text):
@@ -154,7 +164,7 @@ class Example(QMainWindow):
             self.post_index = obj["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]["Address"]["postal_code"]
         except KeyError:
             self.post_index = ""
-        print(self.post_index)
+        # print(self.post_index)
         self.label_addres.setText(obj["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]["text"] + ' ')
         self.post_code_func()
         x, y = obj["GeoObject"]["Point"]["pos"].split()
